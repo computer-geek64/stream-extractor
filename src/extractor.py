@@ -2,13 +2,17 @@
 # extractor.py
 
 import os
+import sys
 import streams
 import requests
 import youtube_dl.utils
 
-
 print('[-] Locating streams...', end='')
-stream_sources, subtitle_sources = streams.locate('https://fmovies.wtf/film/insidious-chapter-2.zp2w/zl6q8kw')
+
+if len(sys.argv) > 1:
+    stream_sources, subtitle_sources = streams.locate(sys.argv[1])
+else:
+    stream_sources, subtitle_sources = streams.locate(input('Enter the website url: '))
 
 stream_source = None
 if len(stream_sources) > 0:
@@ -63,6 +67,9 @@ if stream_source:
 
 if subtitle_source:
     # Download subtitle source
+    print('[-] Extracting subtitles...', end='')
+    ext = subtitle_source['url'].split('?')[0].split('.')[-1]
     response = requests.get(subtitle_source, verify=False)
-    with open(os.path.join(os.path.abspath(os.getcwd()), name + ' Subtitles.' + subtitle_source['url'].split('?')[0]), 'wb') as file:
+    with open(os.path.join(os.path.abspath(os.getcwd()), name + ' Subtitles.' + ext), 'wb') as file:
         file.write(response.content)
+    print('\r[+} Extracted subtitles to \'' + name + '.' + ext + '\'')
