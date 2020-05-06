@@ -20,7 +20,7 @@ def locate(url, search_parameters=['.m3u8', '.mp4', '.mp3']):
     browser = webdriver.Firefox(firefox_profile=profile, options=options)
     proxy.new_har('source', options={'captureHeaders': True})
     browser.get(url)
-    sleep(10)
+    sleep(10    )
     browser.close()
     server.stop()
     streams = []
