@@ -7,12 +7,13 @@ import streams
 import requests
 import youtube_dl.utils
 
-print('[-] Locating streams...', end='')
 
-if len(sys.argv) > 1:
-    stream_sources, subtitle_sources = streams.locate(sys.argv[1])
-else:
-    stream_sources, subtitle_sources = streams.locate(input('Enter the website url: '))
+url = sys.argv[1] if len(sys.argv) > 1 else input('Enter the website URL: ')
+
+print('[-] Locating streams...', end='')
+stream_sources, subtitle_sources = streams.locate(url)
+stream_sources = stream_sources[::-1]
+subtitle_sources = subtitle_sources[::-1]
 
 stream_source = None
 if len(stream_sources) > 0:
