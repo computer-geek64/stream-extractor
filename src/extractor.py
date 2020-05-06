@@ -7,7 +7,7 @@ import youtube_dl
 
 
 print('[-] Locating streams...', end='')
-stream_sources, subtitle_sources = streams.locate('https://fmovies.wtf/film/onward.pp2wj/2okj502')
+stream_sources, subtitle_sources = streams.locate('https://fmovies.wtf/film/insidious-chapter-2.zp2w/zl6q8kw')
 
 stream_source = None
 if len(stream_sources) > 0:
@@ -16,7 +16,9 @@ if len(stream_sources) > 0:
         print(str(i) + ': ' + stream_sources[i]['url'])
 
     selection = input('\nEnter a selection (default=0, n=none): ')
-    if selection.isnumeric() and 0 <= int(selection) < len(stream_sources):
+    if selection == '':
+        stream_source = stream_sources[0]
+    elif selection.isnumeric() and 0 <= int(selection) < len(stream_sources):
         stream_source = stream_sources[int(selection)]
 else:
     print('\r[!] No streams found   ')
@@ -28,7 +30,9 @@ if len(subtitle_sources) > 0:
         print(str(i) + ': ' + subtitle_sources[i]['url'])
 
     selection = input('\nEnter a selection (default=0, n=none): ')
-    if selection.isnumeric() and 0 <= int(selection) < len(subtitle_sources):
+    if selection == '':
+        subtitle_source = subtitle_sources[0]
+    elif selection.isnumeric() and 0 <= int(selection) < len(subtitle_sources):
         subtitle_source = subtitle_sources[int(selection)]
 else:
     print('[!] No subtitles found')
@@ -38,7 +42,7 @@ if stream_source:
     # Download stream source
     youtube_dl_options = {
         'nocheckcertificate': True,
-        'addheader': stream_source['headers'],
+        'addheader': '', #stream_source['headers'],
         'outtmpl': os.path.join(os.path.abspath(os.getcwd()), 'stream.%(ext)s')
     }
     with youtube_dl.YoutubeDL(youtube_dl_options) as ydl:
