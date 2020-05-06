@@ -3,7 +3,8 @@
 
 import os
 import streams
-import youtube_dl
+import requests
+import youtube_dl.utils
 
 
 print('[-] Locating streams...', end='')
@@ -37,17 +38,23 @@ if len(subtitle_sources) > 0:
 else:
     print('[!] No subtitles found')
 
+if stream_source or subtitle_source:
+    name = input('Enter the stream name: ')
 
 if stream_source:
     # Download stream source
-    youtube_dl_options = {
-        'nocheckcertificate': True,
-        'addheader': '', #stream_source['headers'],
-        'outtmpl': os.path.join(os.path.abspath(os.getcwd()), 'stream.%(ext)s')
-    }
-    with youtube_dl.YoutubeDL(youtube_dl_options) as ydl:
-        ydl.download([stream_source['url']])
+    ext = 'mp4'
+        youtube_dl_options = {
+            'nocheckcertificate': True,
+            'outtmpl': os.path.join(os.path.abspath(os.getcwd()), name + '.%(ext)s')
+        }
+        youtube_dl.utils.std_headers.update(stream_source['headers'])
+        with youtube_dl.YoutubeDL(youtube_dl_options) as ydl:
+            ydl.download([stream_source['url']])
+    print('[+] Extracted stream to \'' + name + '.' + ext + '\'')
 
 if subtitle_source:
-    print(subtitle_source)
-    pass  # Download subtitle source
+    # Download subtitle source
+    response = requests.get(subtitle_source, verify=False)
+    with open(os.path.join(os.path.abspath(os.getcwd()), name + ' Subtitles.' + subtitle_source['url'].split('?')[0]), 'wb') as file:
+        file.write(response.content)
