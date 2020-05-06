@@ -43,7 +43,11 @@ if stream_source or subtitle_source:
 
 if stream_source:
     # Download stream source
-    ext = 'mp4'
+    print('[-] Extracting stream...', end='')
+    ext = stream_source['url'].split('?')[0].split('.')[-1]
+    if ext == '.m3u8':
+        print()
+        ext = 'mp4'
         youtube_dl_options = {
             'nocheckcertificate': True,
             'outtmpl': os.path.join(os.path.abspath(os.getcwd()), name + '.%(ext)s')
@@ -51,7 +55,11 @@ if stream_source:
         youtube_dl.utils.std_headers.update(stream_source['headers'])
         with youtube_dl.YoutubeDL(youtube_dl_options) as ydl:
             ydl.download([stream_source['url']])
-    print('[+] Extracted stream to \'' + name + '.' + ext + '\'')
+    else:
+        response = requests.get(stream_source['url'], verify=False)
+        with open(os.path.join(os.path.abspath(os.getcwd()), name + '.' + ext), 'wb') as file:
+            file.write(response.content)
+    print('\r[+] Extracted stream to \'' + name + '.' + ext + '\'')
 
 if subtitle_source:
     # Download subtitle source
