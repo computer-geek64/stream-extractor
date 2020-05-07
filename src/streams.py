@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # streams.py
 
+import os
 import config
 from time import sleep
 from browsermobproxy import Server
@@ -34,4 +35,10 @@ def locate(url, search_parameters=['.m3u8', '.mp4', '.mp3']):
             elif '.vtt' in entry['request']['url'].split('?')[0] or '.srt' in entry['request']['url'].split('?')[0] or '.ass' in entry['request']['url'].split('?')[0]:
                 if request not in subtitles:
                     subtitles.append(request)
-    return (streams, subtitles)
+    if os.path.exists(os.path.join(os.path.abspath(os.getcwd()), 'bmp.log')):
+        os.remove(os.path.join(os.path.abspath(os.getcwd()), 'bmp.log'))
+    if os.path.exists(os.path.join(os.path.abspath(os.getcwd()), 'geckodriver.log')):
+        os.remove(os.path.join(os.path.abspath(os.getcwd()), 'geckodriver.log'))
+    if os.path.exists(os.path.join(os.path.abspath(os.getcwd()), 'server.log')):
+        os.remove(os.path.join(os.path.abspath(os.getcwd()), 'server.log'))
+    return streams, subtitles

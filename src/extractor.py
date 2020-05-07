@@ -7,6 +7,8 @@ import streams
 import requests
 import youtube_dl.utils
 
+os.environ['PYTHONWARNINGS'] = 'ignore:Unverified HTTPS request'
+
 
 url = sys.argv[1] if len(sys.argv) > 1 else input('Enter the website URL: ')
 
@@ -50,7 +52,7 @@ if stream_source:
     # Download stream source
     print('[-] Extracting stream...', end='')
     ext = stream_source['url'].split('?')[0].split('.')[-1]
-    if ext == '.m3u8':
+    if ext == 'm3u8':
         print()
         ext = 'mp4'
         youtube_dl_options = {
@@ -70,7 +72,7 @@ if subtitle_source:
     # Download subtitle source
     print('[-] Extracting subtitles...', end='')
     ext = subtitle_source['url'].split('?')[0].split('.')[-1]
-    response = requests.get(subtitle_source, verify=False)
+    response = requests.get(subtitle_source['url'], verify=False)
     with open(os.path.join(os.path.abspath(os.getcwd()), name + ' Subtitles.' + ext), 'wb') as file:
         file.write(response.content)
     print('\r[+} Extracted subtitles to \'' + name + '.' + ext + '\'')
