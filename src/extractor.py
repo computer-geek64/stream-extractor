@@ -5,10 +5,11 @@ import os
 import sys
 import streams
 import requests
+import warnings
 import youtube_dl.utils
 
-os.environ['PYTHONWARNINGS'] = 'ignore:Unverified HTTPS request'
 
+warnings.filterwarnings("ignore")
 
 url = sys.argv[1] if len(sys.argv) > 1 else input('Enter the website URL: ')
 
