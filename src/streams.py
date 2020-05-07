@@ -9,7 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
 
-def locate(url, search_parameters=['.m3u8', '.mp4', '.mp3']):
+def locate(url, search_parameters=config.SEARCH_PARAMETERS):
     server = Server(config.BROWSERMOB_PROXY)
     server.start()
     proxy = server.create_proxy()
